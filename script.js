@@ -1,27 +1,46 @@
-// Smooth scrolling for navigation links
+// =========================================================
+// TOMY BANDA PORTFOLIO
+// =========================================================
 
-document.querySelectorAll('a[href^="#"]').forEach(link => {
+// Update tahun footer automatically
+const yearElement = document.querySelector("footer p:last-child");
 
-    link.addEventListener("click", function(event) {
+if (yearElement) {
+    const currentYear = new Date().getFullYear();
 
-        const target = document.querySelector(this.getAttribute("href"));
+    yearElement.textContent =
+        `© ${currentYear} Tomy Banda. All rights reserved.`;
+}
 
-        if (target) {
-            event.preventDefault();
 
-            target.scrollIntoView({
-                behavior: "smooth"
-            });
-        }
+// =========================================================
+// NAVIGATION
+// =========================================================
+
+const navLinks = document.querySelectorAll(".navbar nav a");
+
+navLinks.forEach(link => {
+
+    link.addEventListener("click", function () {
+
+        navLinks.forEach(item => {
+            item.classList.remove("active");
+        });
+
+        this.classList.add("active");
 
     });
 
 });
 
 
-// Simple reveal animation
+// =========================================================
+// SCROLL REVEAL
+// =========================================================
 
-const sections = document.querySelectorAll(".section");
+const revealElements = document.querySelectorAll(
+    ".section-heading, .about-grid, .skill, .project, .experience-item"
+);
 
 const observer = new IntersectionObserver(
     entries => {
@@ -29,7 +48,12 @@ const observer = new IntersectionObserver(
         entries.forEach(entry => {
 
             if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
+
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+
+                observer.unobserve(entry.target);
+
             }
 
         });
@@ -40,6 +64,13 @@ const observer = new IntersectionObserver(
     }
 );
 
-sections.forEach(section => {
-    observer.observe(section);
+
+revealElements.forEach(element => {
+
+    element.style.opacity = "0";
+    element.style.transform = "translateY(30px)";
+    element.style.transition = "opacity 0.7s ease, transform 0.7s ease";
+
+    observer.observe(element);
+
 });
